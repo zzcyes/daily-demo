@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    A.html
+    <script>
+        const newWindow = window.open('http://127.0.0.1:4000/B', 'B');
+        newWindow.postMessage({
+            name: 'AA',
+            message: '您好，我是AA'
+        }, 'http://127.0.0.1:4000/B')//向端口为4000的域发送内容
+
+        window.onmessage = function (e) {
+            console.log('A-e：', e)
+            console.log('A-e.data：', e.data);
+            const { name, message } = e.data;
+            localStorage.setItem(name, message);
+        }
+    </script>
+</body>
+
+</html>

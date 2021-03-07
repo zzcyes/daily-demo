@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS</title>
+    <style>
+        button {
+            height: 88px;
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        img {
+            width: 200px;
+            height: 123.6px;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 24px;
+            line-height: 48px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>Page: A.html</li>
+        <li>Port: 3000</li>
+    </ul>
+    <main>
+        <button onclick="refresh()">refresh</button>
+
+        <label>Strong Cache</label>
+        <img class="bg.jpg" src="http://127.0.0.1:3000/bg.jpg" alt="bg.jpg" onclick="getImage(this)">
+
+        <label>Negotiate Cache</label>
+        <img class="chrome.png" src="http://127.0.0.1:3000/chrome.png" alt="chrome.png" onclick="getImage(this)">
+    </main>
+
+    <script>
+        var thisDomain = "http://127.0.0.1:3000";
+
+        function fetchImage(url, callback) {
+            fetch(url, {
+                method: 'GET',
+            }).then(res => {
+                callback && callback(res.url);
+                console.log(`${url} request is succeed:`, res);
+            }).catch(err => {
+                console.error(`${url} request is failed:`, err)
+            })
+        }
+
+        function getImage(global) {
+            var url = `${thisDomain}/${global.alt}`;
+            var img = document.querySelector(`.${global.alt}`);
+            fetchImage(url, (imgUrl) => {
+                if (img) {
+                    img.src = "javascript:void(0)";
+                    img.src = imgUrl;
+                }
+            });
+        }
+
+        function refresh() {
+            location = `${thisDomain}/cache.html`;
+        }
+    </script>
+</body>
+
+</html>

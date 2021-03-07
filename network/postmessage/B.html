@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=B, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    B.html
+    <script type="text/javascript">
+        window.onmessage = function (e) {
+            console.log('B-e：', e)
+            console.log('B-e.data：', e.data);
+            //向父级（发射源）发送消息
+            window.opener.postMessage({
+                name: 'BB',
+                message: '您好，我是BB'
+            }, 'http://127.0.0.1:3000/A');
+            // e.source.postMessage('您好，我是BB', 'http://127.0.0.1:3000/A');
+        }
+    </script>
+</body>
+
+</html>
