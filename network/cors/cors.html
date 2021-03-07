@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS</title>
+    <style>
+        footer {
+            display: flex;
+            flex-direction: column;
+        }
+
+        button {
+            height: 88px;
+            margin: 10px 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>Page: A.html</li>
+        <li>Port: 3000</li>
+    </ul>
+    <footer>
+        <button onclick="getRequest(4000)">GET CORS simple request ,port is 4000</button>
+        <button onclick="getRequest(3000)">GET request ,port is 3000</button>
+        <button onclick="getNoSimpleRequest(4000)">GET CORS no simple request ,port is 4000</button>
+    </footer>
+    <script>
+
+        function getRequest(port) {
+            var cookie;
+            if (port === 3000) {
+                cookie = document.cookie = 'name=zzcyeah'
+            }
+            fetch(`http://127.0.0.1:${port}/simple`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/plain',
+                    // 'accept': '*/*'
+                    // 'my-cookie': 'myCookie',
+                    // 'cookie': cookie,
+                },
+                // credentials: "include"
+            }).then(result => {
+                return result.text();
+            }).then(res => {
+                console.log('cookie:', document.cookie);
+                console.log('getRequest is succeed:', res);
+            }).catch(err => {
+                console.error('getRequest is faild:', err)
+            })
+        }
+        function getNoSimpleRequest(port) {
+            fetch(`http://127.0.0.1:${port}/no-simple?Page=A.html&Port=3000`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: 'zzcyes',
+                    birth: '1997'
+                }),
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'my-cookie': 'myCookie',
+                    'DPR': 'DPR'
+                },
+                credentials: "include"
+            }).then(result => {
+                return result.text();
+            }).then(res => {
+                console.log('cookie:', document.cookie);
+                console.log('getRequest is succeed:', res);
+            }).catch(err => {
+                console.error('getRequest is faild:', err)
+            })
+        }
+    </script>
+</body>
+
+</html>
