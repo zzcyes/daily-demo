@@ -75,6 +75,10 @@
             line-height: 48px;
             text-align: right;
         }
+
+        input{
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -85,43 +89,94 @@
             <li> &lt;img src=&#x27;1.2.3&#x27; onerror=&#x27;alert(&quot;反射型XSS攻击&quot;)&#x27;/&gt;</li>
         </ul> -->
         <h1>宇宙无敌超级安全的银行系统</h1>
-        <!-- <div class="form">
+        <h2>个人信息</h2>
+        <label>
+        用户： <strong class="username"></strong>
+        </label>
+        <label>
+         余额： <strong class="money"></strong> ￥
+        </label>
+        
+       <br>
+       <h2>转账信息</h2>
+        <div class="form">
             <div class="form-row">
-                <span class="label">用户名：</span>
-                <input class="form-username"></input>
+                <span class="label">收款人：</span>
+                <input class="form-receive"></input>
             </div>
             <div class="form-row">
-                <span class="label"> 密码：</span>
-                <input class="form-password" type="password" />
+                <span class="label"> 转账金额：</span>
+                <input class="form-money"  />
             </div>
-            <button onclick="submit()">登录</button>
-        </div> -->
+            <button onclick="submit()">转账</button>
+        </div>
+        <br>
+        <a href="http://127.0.0.1:3000/trade?give=zzcyes&receive=zzcyeah&money=1"  target="_blank" onclick="getUsers()">链接类型的CSRF</a>
+        <br>
+        <!-- <form action="http://127.0.0.1:3000/trade" method=POST>
+            <input type="hidden" name="give" value="zzcyes" />
+            <input type="hidden" name="receive" value="zzcyeah" />
+            <input type="hidden" name="money" value="1" />
+        </form>
+        <script> document.forms[0].submit(); </script> -->
+
+        <br>
+
+        <img src="http://127.0.0.1:3000/trade?give=zzcyes&receive=zzcyeah&money=1" alt="GET类型的CSRF"></img>
+        <br>
 
     </main>
     <script>
-        function submit() {
-            const username = document.querySelector('.form-username').value;
-            const password = document.querySelector('.form-password').value;
-            if (!username || !password) {
-                alert("未正确用户名或密码！")
-                return;
-            }
-            loginAction({ username, password });
-            console.log('login');
+        const queryParams = {};
+        const params = location.search.slice(1).split("&");
+        params.forEach(item => {
+            const [key, value] = item.split("=")
+            queryParams[key] = value;
+        })
+        const username = queryParams.username;
+        getUsers();
+        function getUsers() {
+            var user = document.querySelector('.username');
+            user.innerText = username;
+            getMoney()
         }
 
         // <img src='1.2.3' onerror='alert("反射型XSS攻击")'/>
-        function loginAction({ username, password }) {
-            fetch("http://127.0.0.1:3000/login", {
-                method: 'POST',
-                body: JSON.stringify({ username, password })
+        function getMoney() {
+            fetch(`http://127.0.0.1:3000/getMoney?username=${username}`, {
+                method: 'GET'
             }).then(result => {
                 return result.json();
             }).then(res => {
-                if (res & res.code === 1) {
-                    console.log('res:', res.message);
+                if (res &&(res.code === 1)) {
+                    const money = document.querySelector('.money');
+                    money.innerText = String(res.money);
+                    console.log('res code 1:',res.money);
                 } else {
-                    console.log('res:', res.message);
+                    console.log('res 0:', res.message);
+                }
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+
+        function submit(){
+            const receive = document.querySelector('.form-receive').value;
+            const money = document.querySelector('.form-money').value;
+            trade(receive,money)
+        }
+
+        function trade(receive,money){
+            fetch(`http://127.0.0.1:3000/trade?give=${username}&receive=${receive}&money=${money}`, {
+                method: 'GET'
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                if (res &&(res.code === 1)) {
+                    getMoney();
+                    console.log('res code 1:',res.money);
+                } else {
+                    console.log('res 0:', res.message);
                 }
             }).catch(err => {
                 console.log('err:', err);
