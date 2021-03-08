@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF攻击-个人页面</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reflect-content {
+            border: 2px solid seagreen;
+            border-radius: 4px;
+        }
+
+        .reflect-input-content {
+            border: 2px solid salmon;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .content {
+            margin-top: 10px;
+            width: 200px;
+            height: 100px;
+        }
+
+        input {
+            width: 200px;
+            height: 20px;
+        }
+
+        .form {
+            display: flex;
+            align-items: center;
+            width: 400px;
+            height: 100%;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid salmon;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+
+        .label {
+            min-width: 4em;
+            font-size: 24px;
+            line-height: 48px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <!-- <label>攻击案例</label>
+        <ul>
+            <li> &lt;img src=&#x27;1.2.3&#x27; onerror=&#x27;alert(&quot;反射型XSS攻击&quot;)&#x27;/&gt;</li>
+        </ul> -->
+        <h1>宇宙无敌超级安全的银行系统</h1>
+        <!-- <div class="form">
+            <div class="form-row">
+                <span class="label">用户名：</span>
+                <input class="form-username"></input>
+            </div>
+            <div class="form-row">
+                <span class="label"> 密码：</span>
+                <input class="form-password" type="password" />
+            </div>
+            <button onclick="submit()">登录</button>
+        </div> -->
+
+    </main>
+    <script>
+        function submit() {
+            const username = document.querySelector('.form-username').value;
+            const password = document.querySelector('.form-password').value;
+            if (!username || !password) {
+                alert("未正确用户名或密码！")
+                return;
+            }
+            loginAction({ username, password });
+            console.log('login');
+        }
+
+        // <img src='1.2.3' onerror='alert("反射型XSS攻击")'/>
+        function loginAction({ username, password }) {
+            fetch("http://127.0.0.1:3000/login", {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                if (res & res.code === 1) {
+                    console.log('res:', res.message);
+                } else {
+                    console.log('res:', res.message);
+                }
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>
