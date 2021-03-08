@@ -1,7 +1,8 @@
 const http = require("http");
 const url = require("url");
 const fs = require('fs');
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { Console } = require("console");
 
 function entitytag(entity) {
     if (entity.length === 0) {
@@ -79,22 +80,54 @@ function renderAsset(path, type) {
 
 
 function route(pathname) {
-    const { request,response } = this;
+    const { request, response } = this;
     const name = pathname.replace(/^\//, "");
     console.log("About to route a request for " + name);
     if (/.(jp)|(pn)g$/.test(name)) {
         renderAsset.call(this, name, 'image');
     } else if (/.html$/.test(name)) {
         renderAsset.call(this, name);
-    } else if(name==='reflect'){
-        const {xss} = request.query;
-        response.writeHead(200, { 
-            "Content-Type": "charset=UTF-8;text/plain",
-            "Set-Cookie":"name=zzcyes"
+    } else if (name === 'reflect') {
+        const { username } = request.query;
+        const location = `welcome.html?username=${encodeURIComponent(username)}`;
+        response.writeHead(302, {
+            'Location': location // This is your url which you want
         });
-        response.write(xss);
         response.end();
-    } else {
+    } else if (name === 'storage') {
+        if (request.method.toLowerCase() === 'get') {
+            const dbJSON = fs.readFileSync("db.json")
+            if (dbJSON) {
+                response.writeHead(200, {
+                    "Content-Type": "charset=UTF-8;applation/json",
+                });
+                response.write(dbJSON);
+                response.end();
+            } else {
+                response.writeHead(200, { "Content-Type": "text/plain" });
+                response.write(`this ${name}  is not html or image!`);
+                response.end();
+            }
+        } else {
+            let postData;
+            request.on('data', function (chuck) {
+                postData = chuck;
+            });
+            request.on('end', function () {
+                const { message, author } = JSON.parse(postData);
+                const dbJSON = JSON.parse(fs.readFileSync("db.json").toString());
+                dbJSON &&
+                    dbJSON.comment &&
+                    dbJSON.comment.push({ message, author });
+                fs.writeFileSync("db.json", JSON.stringify(dbJSON, null, 4))
+                response.writeHead(200, { "Content-Type": "text/plain" });
+                response.write('表单提交成功！');
+                response.end();
+            });
+        }
+
+    }
+    else {
         response.writeHead(200, { "Content-Type": "text/plain" });
         response.write(`this ${name}  is not html or image!`);
         response.end();

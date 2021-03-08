@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反射型XSS攻击-登录页</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            width: 100%;
+            font-size: 24px;
+            line-height: 48px;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reflect-content {
+            border: 2px solid seagreen;
+            border-radius: 4px;
+        }
+
+        .reflect-input-content {
+            border: 2px solid salmon;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .content {
+            margin-top: 10px;
+            width: 200px;
+            height: 100px;
+        }
+
+        input {
+            width: 200px;
+            height: 20px;
+        }
+
+        textarea {
+            width: 200px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <label>攻击案例</label>
+        <ul>
+            <li> &lt;img src=&#x27;1.2.3&#x27; onerror=&#x27;alert(&quot;反射型XSS攻击&quot;)&#x27;/&gt;</li>
+        </ul>
+        <div class="row">
+            用户名：
+            <textarea class="form-username"></textarea>
+
+            密码：
+            <input class="form-password" />
+
+            <button onclick="reflect()">登录</button>
+        </div>
+    </main>
+    <script>
+        // <img src='1.2.3' onerror='alert("反射型XSS攻击")'/>
+        function reflect() {
+            const username = document.querySelector('.form-username').value;
+            const password = document.querySelector('.form-password').value;
+            fetch(`http://127.0.0.1:3000/reflect?username=${username}&password=${password}`, {
+                methods: 'GET'
+            }).then(result => {
+                return result;
+            }).then(res => {
+                console.log(location = res.url);
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>

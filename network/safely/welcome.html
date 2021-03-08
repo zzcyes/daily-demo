@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反射型XSS攻击-欢迎页面</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            width: 100%;
+            font-size: 24px;
+            line-height: 48px;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .danger {
+            color: red;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="row">
+            <label> 尊敬的<strong class="danger"></strong>用户，欢迎您的登录！</label>
+        </div>
+        <button onclick="backRoute()">返回</button>
+    </main>
+    <script>
+        (function getUsername() {
+            const queryParams = {};
+            const params = location.search.slice(1).split("&");
+            params.forEach(item => {
+                const [key, value] = item.split("=")
+                queryParams[key] = value;
+            })
+            const { username } = queryParams;
+            if (username) {
+                const strong = document.querySelector('strong')
+                console.log(decodeURIComponent(username));
+                strong.innerHTML = decodeURIComponent(username);
+            }
+        })()
+        function backRoute() {
+            history.go(-1);
+        }
+    </script>
+</body>
+
+</html>
