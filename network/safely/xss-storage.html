@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>存储型XSS攻击</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            width: 100%;
+            font-size: 24px;
+            line-height: 48px;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .blue-button {
+            color: white;
+            background-color: blue;
+        }
+
+        .purple-button {
+            color: white;
+            background-color: slateblue;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* .reflect-content {} */
+
+        .reflect-input-content {
+            border: 2px solid salmon;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .content {
+            margin-top: 10px;
+            width: 400px;
+            height: 100px;
+        }
+
+        .input {
+            width: 200px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="row">
+            <label>攻击案例</label>
+            <ul>
+                <li> &lt;img src=&#x27;1.2.3&#x27; onerror=&#x27;alert(&quot;存储型XSS攻击&quot;)&#x27;/&gt;</li>
+            </ul>
+            <button onclick="refresh()" class="blue-button">刷新列表</button>
+
+            <label>评论列表</label>
+            <ul class="content reflect-content"></ul>
+
+            <label>评论填写</label>
+            内容：
+            <textarea class="content form-message"></textarea>
+            作者：
+            <input class="input form-author"></input>
+
+            <button onclick="storage()" class="purple-button">提交评论</button>
+        </div>
+    </main>
+    <script>
+        // <img src='1.2.3' onerror='alert("存储型XSS攻击")'/>
+
+        refresh();
+
+        function refresh() {
+            const url = "http://127.0.0.1:3000/storage";
+            var parent = document.querySelector('.reflect-content')
+            parent.innerHTML = ""; // 清空原有内容
+            fetch(url, {
+                methods: 'GET'
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                const { comment } = res;
+                console.log('comment:', comment);
+                comment.forEach(item => {
+                    var dom = document.createElement('li');
+                    dom.innerHTML = `${item.message}（${item.author}）`;
+                    parent.appendChild(dom)
+                    console.log('parent:', parent);
+                });
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+
+        function storage() {
+            const message = document.querySelector('.form-message').value;
+            const author = document.querySelector('.form-author').value;
+            // 提交表单
+            fetch("http://127.0.0.1:3000/storage", {
+                method: 'POST',
+                body: JSON.stringify({ message, author })
+            }).then(result => {
+                return result.text();
+            }).then(res => {
+                refresh();
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>

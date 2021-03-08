@@ -1,0 +1,24 @@
+{
+    "comment": [
+        {
+            "message": "您好,我是沙发！",
+            "author": "zzcyes"
+        },
+        {
+            "message": "您好,我是板凳！",
+            "author": "zzcyeah"
+        },
+        {
+            "message": "您好,我是地板！",
+            "author": "zzchaha"
+        },
+        {
+            "message": "您好，我是瓷砖！",
+            "author": "zzc"
+        },
+        {
+            "message": "<img src='1.2.3' onerror='alert(\"存储型XSS攻击\")'/>",
+            "author": "xss"
+        }
+    ]
+}

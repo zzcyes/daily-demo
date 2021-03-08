@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM型XSS攻击</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            width: 100%;
+            font-size: 24px;
+            line-height: 48px;
+        }
+
+
+        .row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reflect-content {
+            width: 200px;
+            height: 100px;
+            margin-top: 10px;
+            border: 2px solid seagreen;
+            border-radius: 4px;
+        }
+
+        textarea {
+            width: 200px;
+            height: 50px;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="row">
+            <label>攻击案例</label>
+            <ul>
+                <li>&#x27;&#x27; onclick=alert(&#x27;DOM型XSS攻击&#x27;)</li>
+            </ul>
+
+            <textarea type="text" placeholder="输入您需要跳转的url" class="url"></textarea>
+            <button onclick="submit()">提交</button>
+            <div class="content"></div>
+        </div>
+    </main>
+    <script>
+        // '' onclick=alert('哈哈，你被攻击了')
+        var content = document.querySelector('.content')
+        function submit() {
+            var url = document.querySelector('.url').value;
+            content.innerHTML = `<a href=${url}>跳转到输入的url</a>`
+        }
+    </script>
+</body>
+
+</html>
