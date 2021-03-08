@@ -6,12 +6,12 @@ const users = {
     "zzcyes": {
         password: '123456',
         session: '49BCE4B850D2615C70404CAC3B1ED59B',
-        money: 0
+        money: 100
     },
     "zzcyeah": {
         password: '123456',
         session: 'b73cd02a16151641468803272e',
-        money: 99999
+        money: 500
     }
 };
 
@@ -55,11 +55,17 @@ function route(pathname) {
                 console.log(username, password, user);
 
                 if (user && password === user.password) {
-                    response.writeHead(200, {
-                        "Content-Type": "charset=UTF-8;applation/json",
-                        "Set-Cookie": `session=${user.session}`
+                    // response.writeHead(200, {
+                    //     "Content-Type": "charset=UTF-8;applation/json",
+                    //     "Set-Cookie": `session=${user.session}`
+                    // });
+                    // response.write(JSON.stringify({ code: 1, message: "登陆成功!", session: user.session }));
+                    // response.end();
+                    const location = `person.html?username=${encodeURIComponent(username)}`;
+                    response.writeHead(302, {
+                    'Location': location, // This is your url which you want
+                    "Set-Cookie": `session=${user.session}`
                     });
-                    response.write(JSON.stringify({ code: 1, message: "登陆成功!", session: user.session }));
                     response.end();
                     return;
                 }
@@ -90,20 +96,24 @@ function route(pathname) {
         response.write(JSON.stringify({ code: 0, message: "获取失败!", session: null }));
         response.end();
     } else if (name === 'trade') {
-        const { give, receive, money } = request.query;
-        const givePerson = users[give];
-        const receivePerson = users[receive];
-        if (givePerson && receivePerson) {
-            receivePerson.money += money;
-            givePerson.money -= money;
+        var give,receive,money;
+      
+              give = request.query.give;
+              receive = request.query.receive;
+              money  = request.query.money;
+              const givePerson = users[give];
+            const receivePerson = users[receive];
+            if (givePerson && receivePerson) {
+                receivePerson.money += money;
+                givePerson.money -= money;
+                response.writeHead(200, { "Content-Type": "charset=UTF-8;applation/json" });
+                response.write(JSON.stringify({ code: 1, message: "交易成功!", session: null }));
+                response.end();
+                return;
+            }
             response.writeHead(200, { "Content-Type": "charset=UTF-8;applation/json" });
-            response.write(JSON.stringify({ code: 1, message: "交易成功!", session: null }));
+            response.write(JSON.stringify({ code: 0, message: "交易失败!", session: null }));
             response.end();
-            return;
-        }
-        response.writeHead(200, { "Content-Type": "charset=UTF-8;applation/json" });
-        response.write(JSON.stringify({ code: 0, message: "交易失败!", session: null }));
-        response.end();
     } else {
         response.writeHead(200, { "Content-Type": "text/plain" });
         response.write(`this ${name}  page is not html type!`);

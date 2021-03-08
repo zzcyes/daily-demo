@@ -116,16 +116,9 @@
                 method: 'POST',
                 body: JSON.stringify({ username, password })
             }).then(result => {
-                return result.json();
+                return result;
             }).then(res => {
-                if (res & res.code === 1) {
-                    console.log('res:', res.message);
-                    alert(res.message)
-                    window.location.replace('http://127.0.0.1:3000/person.html');
-                } else {
-                    console.log('res:', res.message);
-                    alert(res.message)
-                }
+                location = res.url
             }).catch(err => {
                 console.log('err:', err);
             })
