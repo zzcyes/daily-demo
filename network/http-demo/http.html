@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .content {
+            position: relative;
+            color: whitesmoke;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: burlywood;
+        }
+
+        .content:empty {
+            padding: 0;
+        }
+
+        label {
+            min-width: 4em;
+            font-size: 24px;
+            line-height: 48px;
+            text-align: left;
+        }
+
+        input {
+            width: 200px;
+            height: 20px;
+        }
+
+        div {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <label>用户信息</label>
+        <div class="content user"></div>
+
+        <button onclick="onHTTPRequest('GET')">GET</button>
+
+        <button onclick="onHTTPRequest('POST')">POST</button>
+
+        <button onclick="onHTTPRequest('PUT')">PUT</button>
+
+        <div>修改message: <input class="input post" /></div>
+
+        <button onclick="onHTTPRequest('HEAD')">HEAD</button>
+        <div class="content head"></div>
+    </main>
+    <script name="commom">
+        function getFetchRequestHeaders(request) {
+            const headers = {};
+            if (request &&
+                request.headers &&
+                request.headers.keys) {
+                for (const key of request.headers.keys()) {
+                    headers[key] = request.headers.get(key);
+                }
+            }
+            return headers;
+        }
+
+        function JSONStringifyFormat(str) {
+            return JSON.stringify(str, null, 4);
+        }
+
+
+    </script>
+    <script name="main">
+        const username = "zzcyes"
+        const url = "http://127.0.0.1:3000/user";
+
+        const form = {
+            id: '',
+            username: '',
+            birth: '',
+            sex: '',
+            job: '',
+            message: ''
+        };
+
+        function createFormTemplate(key, value) {
+            return `<div class="label">
+                    <strong class="key">${key}：</strong>
+                    <span class="value">${value}</span>
+                </div>`;
+        }
+
+        function createUserTemplate(form, selector = ".content") {
+            const userEl = document.querySelector(selector);
+            let template = "";
+            Object.keys(form).forEach(key => {
+                template += createFormTemplate(key, form[key]);
+            });
+            template += createFormTemplate('date', new Date());
+            userEl.innerHTML = template;
+        }
+
+
+        createUserTemplate(form, '.content.user');
+
+        function onHTTPRequest(method) {
+            switch (method) {
+                case 'GET':
+                    requestGet();
+                    break;
+                case 'PUT':
+                    requestPut();
+                    break;
+                case 'POST':
+                    requestPost();
+                    break;
+                case 'HEAD':
+                    requestHead();
+                    break;
+                default:
+                    console.warn('onHTTPRequest：没有找到method');
+                    break;
+            }
+        }
+
+        function requestGet() {
+            fetch(`${url}?username=${username}&message=get`, {
+                method: 'GET'
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                createUserTemplate(res.data, '.content.user');
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+
+        function requestPost() {
+            const inputDOM = document.querySelector('.input.post');
+            inputValue = inputDOM && inputDOM.value;
+            const params = {
+                username,
+                message: inputValue || ''
+            };
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(params)
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+
+        function requestPost() {
+            const inputDOM = document.querySelector('.input.post');
+            inputValue = inputDOM && inputDOM.value;
+            const params = {
+                username,
+                message: inputValue || ''
+            };
+            fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(params)
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+
+        function requestHead() {
+            fetch(`${url}?username=${username}&message=head`, {
+                method: 'HEAD'
+            }).then(result => {
+                const dom = document.querySelector('.head');
+                dom.innerText = JSONStringifyFormat(getFetchRequestHeaders(result));
+                console.log('result:', getFetchRequestHeaders(result));
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>
