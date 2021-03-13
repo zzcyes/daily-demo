@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>file-upload</title>
+    <link type="text/css" rel="stylesheet" href="index.css" />
+</head>
+</head>
+
+<body>
+    <main>
+        <label>上传图片</label>
+        <div class="content"></div>
+        <input class="file-upload input" type="file" />
+        <button onclick="uploadFile()">SUMBIT</button>
+    </main>
+    <script name="commom"></script>
+    <script name="main">
+        const username = "zzcyes"
+        const url = "http://127.0.0.1:3000/uploadFile";
+        const inputDOM = document.querySelector('.file-upload');
+        const fileList = [];
+        inputDOM.addEventListener('change', function (e) {
+            const [file] = e.target.files;
+            if (file) {
+                fileList.push(file);
+            }
+        });
+
+        function uploadFile() {
+            // const inputDOM = document.querySelector('.input.post');
+            // inputValue = inputDOM && inputDOM.value;
+            if (!fileList.length) {
+                alert('没有要submit的文件');
+                return;
+            }
+            const [file] = fileList;
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "multi-part/data"
+                },
+                body: formData
+                // body: JSON.stringify(params)
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>
