@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            color: white;
+            background-color: slateblue;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .content {
+            color: whitesmoke;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: burlywood;
+        }
+
+        .content:empty {
+            padding: 0;
+        }
+
+        label {
+            min-width: 4em;
+            font-size: 24px;
+            line-height: 48px;
+            text-align: left;
+        }
+
+        input {
+            width: 200px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <label>上传图片</label>
+        <div class="content"></div>
+        <input class="file-upload input" type="file" />
+        <button onclick="uploadFile('POST')">HEAD</button>
+    </main>
+    <script name="commom"></script>
+    <script name="main">
+        const username = "zzcyes"
+        const url = "http://127.0.0.1:3000/uploadFile";
+        function uploadFile() {
+            const inputDOM = document.querySelector('.input.post');
+            inputValue = inputDOM && inputDOM.value;
+
+            const formData = new FormData();
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(params)
+            }).then(result => {
+                return result.json();
+            }).then(res => {
+                console.log('res:', res);
+            }).catch(err => {
+                console.log('err:', err);
+            })
+        }
+    </script>
+</body>
+
+</html>
