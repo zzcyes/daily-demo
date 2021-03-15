@@ -22,31 +22,27 @@
         const username = "zzcyes"
         const url = "http://127.0.0.1:3000/uploadFile";
         const inputDOM = document.querySelector('.file-upload');
-        const fileList = [];
+        let chooseFile;
         inputDOM.addEventListener('change', function (e) {
             const [file] = e.target.files;
-            if (file) {
-                fileList.push(file);
-            }
+            chooseFile = file
         });
 
         function uploadFile() {
-            // const inputDOM = document.querySelector('.input.post');
             // inputValue = inputDOM && inputDOM.value;
-            if (!fileList.length) {
+            console.log( chooseFile, chooseFile.name);
+            if (!chooseFile) {
                 alert('没有要submit的文件');
                 return;
             }
-            const [file] = fileList;
             const formData = new FormData();
-            formData.append('file', file, file.name);
+            formData.append('file', chooseFile, chooseFile.name);
             fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': "multi-part/data"
                 },
                 body: formData
-                // body: JSON.stringify(params)
             }).then(result => {
                 return result.json();
             }).then(res => {
