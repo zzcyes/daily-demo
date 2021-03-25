@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <title>flow</title>
+    <style>
+        .button-group {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            width: 100%;
+            /* margin-bottom: 20px; */
+            background-color: #ff5e57;
+        }
+
+        .button {
+            /* margin-left: 10px; */
+            width: 68px;
+            height: 48px;
+            outline: none;
+            border: none;
+            border-radius: 8px;
+            color: aliceblue;
+            background-color: #575fcf;
+            background-color: #ff5e57;
+            background-color: #4bcffa;
+            background-color: #0be881;
+        }
+
+        .active {
+            /* color: black; */
+            background-color: #3c40c6;
+            background-color: #f53b57;
+            background-color: #0fbcf9;
+        }
+
+        .content {
+            position: relative;
+        }
+
+        .text {
+            width: 50%;
+            padding: 5px;
+            font-size: 16px;
+            line-height: 24px;
+            background-color: skyblue;
+        }
+
+        .box {
+            margin: 5px 0;
+            background-color: slateblue;
+
+        }
+
+        .float {
+            float: left;
+        }
+
+        .relative {
+            position: relative;
+            top: 50px;
+            left: 100px;
+        }
+
+        .absolute {
+            position: absolute;
+            top: 50px;
+            left: 100px;
+        }
+
+        .fixed {
+            position: fixed;
+            top: 50px;
+            left: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+        <div class="text">
+            《送你一朵小红花》
+            送你一朵小红花
+            开在你昨天新长的枝桠
+            奖励你有勇气
+            主动来和我说话
+            不共戴天的冰水啊
+            义无反顾的烈酒啊
+            多么苦难的日子里
+            你都已战胜了它
+            <!-- 送你一朵小红花
+            遮住你今天新添的伤疤
+            奖励你在下雨天
+            还愿意送我回家
+            科罗拉多的风雪啊
+            喜马拉雅的骤雨啊
+            只要你相信我
+            闭上眼就能到达 -->
+        </div>
+        <!-- createBoxs -->
+        <!-- <div class="box">
+            normal flow A.
+        </div>
+        <div class="box">
+            normal flow B.
+        </div>
+        <div class="box">
+            normal flow C.
+        </div> -->
+    </div>
+
+    <div class="button-group">
+        <button class="button button-float" onclick="onSwitchLayout(this)">float</button>
+        <button class="button button-relative" onclick="onSwitchLayout(this)">relative</button>
+        <button class="button button-absolute" onclick="onSwitchLayout(this)">absolute</button>
+        <button class="button button-fixed" onclick="onSwitchLayout(this)">fixed</button>
+    </div>
+
+    <script>
+        (function () {
+            // format text div
+            const dom = document.querySelector('.text');
+            const textGroup = dom.innerText.split(" ");
+            dom.innerHTML = textGroup.map(text => `${text}<br>`).join("");
+
+            // create box div
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 11; i++) {
+                const child = document.createElement('div');
+                child.classList.add('box');
+                child.innerText = '赵英俊'
+                frag.appendChild(child);
+            }
+            document.querySelector(".content").append(frag)
+        })()
+    </script>
+    <script>
+        function toggleElsClass(selectorName, className) {
+            const els = document.querySelectorAll(selectorName);
+            els.forEach(el => {
+                if (Array.from(el.classList).includes(className)) {
+                    el.classList.remove(className);
+                } else {
+                    el.classList.add(className);
+                }
+            })
+        }
+
+        function onSwitchLayout(e) {
+            const type = e.innerText;
+            const dom = document.querySelector('.active');
+            const buttonType = `button-${type}`;
+            if (dom) {
+                const classList = Array.from(dom.classList);
+                if (classList.includes(buttonType) && classList.includes('active')) {
+                    dom.classList.remove('active')
+                } else {
+                    dom.classList.remove('active')
+                    toggleElsClass(`.${buttonType}`, 'active')
+                }
+            } else {
+                toggleElsClass(`.${buttonType}`, 'active')
+            }
+            toggleElsClass('.text', type)
+        }
+    </script>
+</body>
+
+</html>

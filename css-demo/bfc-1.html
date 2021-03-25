@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFC-1</title>
+    <style>
+        .div {
+            width: 100%;
+            line-height: 100px;
+            text-align: center;
+            color: #f55;
+            background: seagreen;
+            display: inline-block;
+        }
+
+        .margin-bottom {
+            margin-bottom: 100px;
+        }
+
+        .margin-top {
+            margin-top: 60px;
+        }
+
+        .parent {
+            margin-top: 100px;
+            border: 5px solid slateblue;
+            width: 300px;
+            /* overflow: auto; */
+        }
+
+        .child {
+            border: 5px solid salmon;
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="div margin-bottom">margin-bottom：100px</div>
+    <div class="div margin-top">margin-top：60px</div>
+
+    <br>
+
+    <div class="parent">
+        <div class="child"></div>
+        <div class="child"></div>
+    </div>
+</body>
+
+</html>

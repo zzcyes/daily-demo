@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFC-2</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            /* position: relative; */
+        }
+
+        .aside {
+            width: 100px;
+            height: 50%;
+            float: left;
+            background: skyblue;
+        }
+
+        .main {
+            height: 100%;
+            background: slateblue;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aside"></div>
+    <div class="main"></div>
+</body>
+
+</html>
