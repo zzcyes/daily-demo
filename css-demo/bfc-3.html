@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFC-3</title>
+    <style>
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+        }
+
+        .container {
+            height: 100%;
+        }
+
+        .left {
+            width: 320px;
+            height: 100%;
+            float: left;
+            color: skyblue;
+            background: slateblue;
+        }
+
+        .center {
+            height: 100%;
+            color: salmon;
+            background: skyblue;
+            overflow: hidden;
+        }
+
+        .right {
+            width: 320px;
+            height: 100%;
+            color: slateblue;
+            background: salmon;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left">
+            <pre>
+    .left{
+        width: 320px;
+        height: 100%;
+        float: left;
+        color: skyblue;
+        background: slateblue;
+    }
+            </pre>
+        </div>
+
+        <div class="right">
+            <pre>
+    .right{
+        height: 100%;
+        color: salmon;
+        background: skyblue;
+        overflow: hidden;
+    }
+            </pre>
+        </div>
+        <div class="center">
+            <pre>
+    .center{
+        width: 320px;
+        height: 100%;
+        color: slateblue;
+        background: salmon;
+        float: right;
+    }
+            </pre>
+        </div>
+    </div>
+</body>
+
+</html>
