@@ -7,30 +7,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .move {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #0ff;
-            animation: move 2s linear 3 alternate both;
+        * {
+            padding: 0;
+            margin: 0;
         }
 
-        @keyframes move {
-            0% {
-                transform: translate(0, 0);
-            }
-
-            100% {
-                transform: translate(200px, 0);
-            }
+        .content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100vw;
+            padding: 20px 0;
+            background-color: salmon;
         }
 
-        .rotate {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #0ff;
-            animation: rotate 2s;
+        .loop {
+            width: 80px;
+            height: 80px;
+        }
+
+        .running {
+            /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+            animation-name: rotate;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+            animation-direction: normal;
+            animation-fill-mode: none;
+        }
+
+        .custom {
+            animation-name: rotate;
+            animation-duration: 1s;
+            animation-timing-function: cubic-bezier(.49, .06, 1, .51);
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+            animation-direction: normal;
+            animation-fill-mode: none;
+        }
+
+        .running-back {
+            /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+            animation-name: rotate;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-fill-mode: none;
         }
 
         @keyframes rotate {
@@ -46,8 +71,17 @@
 </head>
 
 <body>
-    <div class="move">move</div>
-    <div class="rotate">rotate</div>
+    <div class="content">
+        <img class="loop running" alt="loop.png" src="./loop.png">
+
+        <img class="loop custom" alt="loop.png" src="./loop.png">
+
+        <img class="loop running-back" alt="loop.png" src="./loop.png">
+
+    </div>
+
+
+
 </body>
 
 </html>
